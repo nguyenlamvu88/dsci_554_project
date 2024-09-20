@@ -7,18 +7,16 @@
     <!-- Minified Bootstrap CSS for faster loading -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Base styles for body and html for full height and font */
         body, html {
             height: 100%;
             margin: 0;
             font-family: 'Trebuchet MS', Helvetica, sans-serif;
-            padding-top: 50px; /* Padding to ensure content is below the navbar */
+            padding-top: 50px;
             background-color: black;
             display: flex;
             flex-direction: column;
         }
 
-        /* Navbar styles */
         .navbar-custom {
             background-color: rgb(16, 1, 1);
             color: #ffffff;
@@ -35,212 +33,118 @@
             color: #ffe5e5;
         }
 
-        /* Container for background image */
         .interactive-bg {
-            position: relative;
-            background: url('https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/game_controller.jpg') no-repeat center center;
+            position: fixed;
+            background: url('https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/map_game.jpg') no-repeat center center;
             background-size: contain;
             background-attachment: fixed;
             background-color: black;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* Hotspot styles with fixed size */
         .hotspot {
-            position: absolute; /* Position hotspots absolutely within the relative background container */
-            width: 150px;  /* Fixed width */
-            height: 100px; /* Fixed height */
+            position: absolute;
+            width: 150px;
+            height: 100px;
             border-radius: 10px;
-            border: 2px outset rgba(255, 255, 255, 0.5);
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: all 0.3s ease;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
 
-        .hotspot-1 {
-            top: 30%; 
-            left: 30%;
-			border-radius: 50%; /* Makes the hotspot a circle */
+        .hotspot::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: rgb(21, 222, 65);
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+            z-index: 1;
         }
 
-        .hotspot-2 {
-            top: 28%;
-            left: 53.5%;
-        }
-
-        .hotspot-3 {
-            top: 28%;
-            left: 39.5%;
-        }
-
-        .hotspot-4 {
-            top: 13%;
-            left: 59.2%;
-            transform: rotate(45deg);
-        }
-
-        .hotspot-5 {
-            top: 10%;
-            left: 42.7%;
-            width: 275px;  /* Adjusted width for larger hotspot */
-            height: 128px; /* Adjusted height for larger hotspot */
-        }
-
-        .hotspot:hover {
-            border: 2px solid #FFD700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-        }
-
-        /* General flashing animation for all hotspots */
-        @keyframes flash {
-            0%, 100% {
-                box-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
-            }
-        }
-
-        /* Hotspot positions using vw and vh for viewport responsiveness */
         .hotspot-1 {
             top: 12.5vh; left: 30.7vw;
-            border: 6px solid #ced411;
+            border: 3.5px solid #00ffff;
+            background-image: url('path_to_your_image_1.png');
             animation: flash 1.5s infinite;
-            transition: all 1s ease; /* Ensures smooth animation and scaling */
+            transition: all 1s ease;
+            z-index: 2;
         }
-
         .hotspot-1:hover {
-            border-color: #dc1010;
-            transform: scale(2); /* Enlarges on hover */
-            border-style: dotted;
-        }
-
-        .hotspot-1::after {
-            content: "Global Sales by Region";
-            position: absolute;
-            top: 90%;  
-            left: -90%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #e70909;
-            font-size: 10px;
-            padding: 0px 5px;
-            border-radius: 8px;
+            border: dotted #00bfff;
+            transform: scale(1.5);
         }
 
         .hotspot-2 {
             top: 28vh; left: 53.5vw;
-            border: 5px dashed #ffcc00;
-            animation: flash 1.5s infinite;
-            transition: all 0.7s ease; /* Ensures smooth animation */
+            border: 3.5px solid #ff00ff;
+            background-image: url('path_to_your_image_2.png');
+            animation: flash 1.5s infinite alternate;
+            transition: all 0.7s ease;
+            z-index: 2;
         }
-
         .hotspot-2:hover {
-            border-color: #ff0066;
-            transform: scale(2); /* Enlarges on hover */
-        }
-
-        .hotspot-2::after {
-            content: "Top 10 Games by Sales";
-            position: absolute;
-            top: 105%;
-            left: 25%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #dc1010;
-            font-size: 10px;
-            padding: 0px 5px;
-            border-radius: 8px;
+            border: dotted #ff1493;
+            transform: scale(1.5);
         }
 
         .hotspot-3 {
             top: 28vh; left: 39.5vw;
-            border: 5px dashed #ff4500;
+            border: 3.55px solid #ffff00;
+            background-image: url('path_to_your_image_3.png');
             animation: flash 1.5s infinite;
             transition: all 0.7s ease;
+            z-index: 2;
         }
-
         .hotspot-3:hover {
-            border-color: #32cd32;
-            transform: scale(2); /* Enlarges on hover */
-        }
-
-        .hotspot-3::after {
-            content: "Sales by Publisher";
-            position: absolute;
-            top: 105%;
-            left: 25%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #ff4500;
-            font-size: 10px;
-            padding: 0px 5px;
-            border-radius: 8px;
+            border: dotted #ffd700;
+            transform: scale(1.5);
         }
 
         .hotspot-4 {
             top: 11.5vh; left: 60.4vw;
             width: 125px;
             height: 123px;
-            border: 5px dotted #ff0000;
-            animation: flash 1.5s infinite;
+            border: 3.5px solid #ff4500;
+            background-image: url('https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/stack_bar_line_chart.png');
+            animation: flash 1.5s infinite alternate;
             transition: all 1s ease;
-            transform: rotate(45deg); /* Rotation added */
+            transform: rotate(45deg);
+            z-index: 2;
         }
-
         .hotspot-4:hover {
-            border-color: #00ff00;
-            transform: rotate(0deg) scale(2); /* Keeps the rotation and enlarges */
-            background-image: url('https://nguyenlamvu88.github.io/dsci_554_project/images_icons_logos/stack_bar_line_chart.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-
-        .hotspot-4::after {
-            content: "Sales Over Time by Platform";
-            position: absolute;
-            top: 80%;
-            left: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #ff0000;
-            font-size: 10px;
-            padding: 0px 5px;
-            border-radius: 8px;
+            border: dotted #ff0000;
+            transform: rotate(0deg) scale(1.5);
         }
 
         .hotspot-5 {
             top: 10vh; left: 42.7vw;
-            width: 275px;
-            height: 128px;
-            border: 3.5px inset #ffd700;
+            width: 200px;
+            height: 100px;
+            border: 3.5px solid #00ff00;
+            background-image: url('https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/video_game_wordcloud.png');
             animation: flash 1.5s infinite;
             transition: all 0.7s ease;
+            z-index: 2;
         }
-
         .hotspot-5:hover {
-            border-color: #00ced1;
-            transform: scale(1.5); /* Enlarges on hover */
-            background-image: url('https://nguyenlamvu88.github.io/dsci_554_project/images_icons_logos/video_game_wordcloud.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
+            border: dotted #32cd32;
+            transform: scale(1.5);
         }
 
-        .hotspot-5::after {
-            content: "Wordcloud Visualization Global Sales";
-            position: absolute;
-            top: 105%;
-            left: 33%;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #e70909;
-            font-size: 10px;
-            padding: 0px 5px;
-            border-radius: 8px;
-        }
-
-        /* Footer styles */
-        footer {
+        .footer {
             background: #233D4D;
             color: #fff;
             text-align: center;
@@ -265,7 +169,6 @@
             background-color: #3e8e41;
         }
 
-        /* Landing page style */
         .landing-page {
             display: flex;
             flex-direction: column;
@@ -275,88 +178,177 @@
             background-color: black;
             color: white;
             text-align: center;
-            transition: opacity 0.5s ease-in-out; /* Smooth transition */
+            transition: opacity 0.5s ease-in-out;
         }
 
         .main-content {
-        display: none; /* This hides the main content initially */
-        display: none; /* Initially hidden */
-        flex-direction: column;
-        height: 100%;
-        width: 100%;
-        opacity: 0; /* Initial opacity for transition */
-        padding-top: 50px; /* Space for fixed navbar */
-        transition: opacity 0.5s ease-in-out; /* Smooth transition */
-        background: url('https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/game_controller.jpg') no-repeat center center; /* Add the background image */
-        background-size: contain; /* Keep the size of the image */
-        background-attachment: fixed; /* Fix the image to the background */
-        background-color: black; /* Fallback color */
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            padding-top: 50px;
+            transition: opacity 0.5s ease-in-out;
+            background: url('https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/map_game.jpg') no-repeat center center;
+            background-size: contain;
+            background-attachment: fixed;
+            background-color: black;
         }
 
-        /* Start Button Styles */
         .start-btn {
-            width: 260px; /* Adjust width as needed */
-            height: 250px; /* Adjust height as needed */
-            background-image: url('https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/smurf.jpg'); /* Replace with your image URL */
-            background-size: contain; /* Ensures the image covers the entire button */
-            background-position: center; /* Centers the image */
-            border: 100%; /* Removes the default border */
-            cursor: pointer; /* Changes cursor to pointer */
-            display: flex; /* Centers the content */
-            justify-content: center; /* Centers the content */
-            align-items: center; /* Centers the content */
-            color: transparent; /* Hides any text (optional) */
-            text-align: center; /* Centers text, if any */
-            font-size: 0; /* Hides text */
-            transition: transform 0.3s ease; /* Smooth transition for effects */
-            animation: jump 1s infinite ease-in-out; /* Apply the jumping animation */
+            width: 260px;
+            height: 250px;
+            background-image: url('https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/smurf.jpg');
+            background-size: contain;
+            background-position: center;
+            border: 100%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: transparent;
+            text-align: center;
+            font-size: 0;
+            transition: transform 0.3s ease;
+            animation: jump 1s infinite ease-in-out;
         }
-/* Keyframes for the Jumping Animation */
-@keyframes jump {
-    0%, 100% {
-        transform: translateY(0); /* Initial position */
-    }
-    50% {
-        transform: translateY(-10px); /* Moves up by 10px */
-    }
-}
-        /* Hover Effect */
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95); /* Darker background */
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+            padding: 20px; /* Padding around the content */
+        }
+
+        .overlay-content {
+            position: relative;
+            background-color: #111;
+            padding: 30px; /* More padding for content */
+            width: 95%; /* Increased width */
+            max-width: 1200px; /* Increased max-width */
+            border-radius: 8px;
+        }
+
+        .overlay-item {
+            display: none;
+        }
+
+        .overlay-item.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: transparent;
+            color: white;
+            font-size: 30px;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .close-btn:hover {
+            color: #ff0000;
+        }
+
+        /* Container to align the chart and text side by side */
+        .content-container {
+            display: flex; /* Display content side by side */
+            align-items: flex-start; /* Align items at the top */
+            justify-content: space-between; /* Space between chart and text */
+            gap: 30px; /* Space between iframe and text */
+        }
+
+        /* Styles for the text container */
+        #chart-note {
+            max-width: 25%; /* Increased width for the text */
+            margin-left: 10px; /* Space between chart and text */
+            text-align: left; /* Align text to the left */
+        }
+
+        /* Iframe container styles */
+        .content-container iframe {
+            flex: 3; /* Allows the iframe to take twice the space of the text container */
+            max-width: 80%; /* Ensure the iframe has a good width balance */
+            height: 550px;
+            border: none; /* Remove iframe border */
+        }
+
+        /* Styles for delayed text appearance */
+        .delayed-text {
+            opacity: 0; /* Start with hidden text */
+            animation: fadeIn 1s forwards; /* Apply animation */
+            margin-bottom: 10px; /* Space between text elements */
+        }
+
+        /* Increased delays by 5s */
+        #chart-note p:nth-of-type(1) { animation-delay: 4s; }
+        #chart-note p:nth-of-type(2) { animation-delay: 8s; }
+        #chart-note p:nth-of-type(3) { animation-delay: 12s; }
+        #chart-note ul li:nth-of-type(1) { animation-delay: 16s; }
+        #chart-note ul li:nth-of-type(2) { animation-delay: 20s; }
+        #chart-note ul li:nth-of-type(3) { animation-delay: 24s; }
+        #chart-note ul li:nth-of-type(4) { animation-delay: 28s; }
+        #chart-note ul li:nth-of-type(5) { animation-delay: 32s; }
+        #chart-note p:nth-of-type(4) { animation-delay: 36s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1; /* Final state is fully visible */
+            }
+        }
+
+        @keyframes jump {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
         .start-btn:hover {
-            transform: scale(1.2); /* Slightly enlarges the button on hover */
+            transform: scale(1.2);
         }
 
-        /* Landing page style */
         .landing-page h1 {
-            font-family: 'Arial', sans-serif; /* Change to desired font */
-            font-size: 40px; /* Adjust the size as needed */
-            color: #FFD700; /* Change to desired color (e.g., gold) */
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Optional: add text shadow for better visibility */
-            margin: 10px 0; /* Adjust spacing between headings */
-            text-align: center; /* Center-align the text */
+            font-family: 'Arial', sans-serif;
+            font-size: 40px;
+            color: #FFD700;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            margin: 10px 0;
+            text-align: center;
         }
-
     </style>
 </head>
 <body>
 
-<!-- Landing Page -->
-    <div class="landing-page" id="landingPage">
-        <h1>Let's Get Started</h1>
-        <button class="start-btn" onclick="startExperience()">Start</button>
-    </div>
-	
-<!-- Main Content -->
-<div class="main-content" id="mainContent">
-    
+<div class="landing-page" id="landingPage">
+    <h1>Let's Get Started</h1>
+    <button class="start-btn" onclick="startExperience()">Start</button>
+</div>
 
-    <!-- Navigation bar -->
+<div class="main-content" id="mainContent">
+
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container d-flex justify-content-between align-items-center">
             <div>
                 <a class="navbar-brand" href="#">DSCI 554 (Fall 2024) - Game On: A Data-Driven Exploration of Global Sales</a>
-                <div style="font-size: 20px; color: #ffff00;">Team S.M.U.R.F</div> <!-- Additional text line -->
+                <div style="font-size: 20px; color: #ffff00;">Team S.M.U.R.F</div>
             </div>
-            <!-- Right Side (Button and Logo) -->
             <div class="d-flex align-items-center">
                 <button class="btn btn-contact-me" data-toggle="modal" data-target="#contactModal"
                     style="font-size: 16px; padding: 10px 20px; background-color: #212b9b; color: white; margin-right: 20px;">
@@ -369,229 +361,132 @@
         </div>
     </nav>
 
-    <!-- Interactive Hotspots on the Background -->
     <div class="interactive-bg">
-        <a href="visualization1.html" class="hotspot hotspot-1" data-title=""></a>
-        <a href="visualization2.html" class="hotspot hotspot-2" data-title=""></a>
-        <a href="visualization3.html" class="hotspot hotspot-3" data-title=""></a>
-
-        <!-- Clickable Hotspot 4 (Platform Sales) -->
-        <a href="javascript:void(0);" class="hotspot hotspot-4" onclick="showVisualization(event)"></a>
-
-        <!-- Clickable Hotspot 5 for Wordcloud Visualization -->
-        <a href="javascript:void(0);" class="hotspot hotspot-5" onclick="showWordcloud(event)"></a>
+        <a href="javascript:void(0);" class="hotspot hotspot-1" data-text="Global Sales by Region" onclick="showOverlay('content1')"></a>
+        <a href="javascript:void(0);" class="hotspot hotspot-2" data-text="Top 10 Games by Sales" onclick="showOverlay('content2')"></a>
+        <a href="javascript:void(0);" class="hotspot hotspot-3" data-text="Sales by Publisher" onclick="showOverlay('content3')"></a>
+        <a href="javascript:void(0);" class="hotspot hotspot-4" data-text="Sales Over Time by Platform" onclick="showOverlay('content4')"></a>
+        <a href="javascript:void(0);" class="hotspot hotspot-5" data-text="Wordcloud Visualization Global Sales" onclick="showOverlay('content5')"></a>
     </div>
 
-    <!-- Hidden iframe for Visualization 4 (Platform Sales) -->
-    <div id="visualization4" style="display:none; justify-content: center; align-items: center; height: 100vh; position: relative;">
-        <button id="close-btn" 
-                style="
-                    position: absolute; 
-                    top: 10px; 
-                    right: 10px; 
-                    background-color: lightcyan; 
-                    color: rgb(213, 10, 10); 
-                    font-size: 25px; 
-                    font-weight: bold; 
-                    padding: 5px 10px; 
-                    border: none; 
-                    border-radius: 20%; 
-                    cursor: pointer; 
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-                    ">
-            &times;
-        </button>
-        
-        <!-- Iframe with id="chart-iframe" -->
-        <iframe id="chart-iframe"  
-        src="https://nguyenlamvu88.github.io/dsci_554_project/vis_html/game_sales_over_time_stacked_bar_with_line_chart.html"
-        width="75%" height="800px" style="border:none;" loading="lazy"></iframe>
+    <!-- Overlay Element -->
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <button class="close-btn" onclick="hideOverlay()">&times;</button>
+            
+            <div id="content1" class="overlay-item">
+                <h2>Global Sales by Region</h2>
+                <iframe src="visualization1.html" width="100%" height="600px"></iframe>
+            </div>
 
-        <div id="chart-note" style="margin-top: 15px; text-align: left; color: #95c416; font-size: 18px; max-width: 600px;">
-            <p style="color: lightslategray;">Note: <strong>Double click</strong> on the legend to isolate one trace.</p>
-            <p style="color: lightslategray;"> Example: By double-clicking on "PS3" in the legend, only the sales data for PS3 will be displayed on the chart, hiding the data for all other platforms like Wii, Xbox 360, etc.</p>
-            <p>The chart shows key trends in the gaming industry:
-            <ul style="list-style-type: disc; margin: 20px 0; padding-left: 20px;">
-                <li>Global video game sales peaked between <strong>2008-2010</strong>, driven by <strong>PS3</strong>, <strong>Wii</strong>, and <strong>Xbox 360</strong>.</li>
-                <li><strong>Sony</strong> and <strong>Nintendo</strong> consistently dominated sales with key consoles like the <strong>PS2</strong> and <strong>Wii</strong>.</li>
-                <li><strong>Sega</strong> was a key player in the <strong>1980s-1990s</strong>.</li>
-                <li>After <strong>2010</strong>, console sales declined with the rise of <strong>mobile</strong> and <strong>digital platforms</strong>.</li>
-                <li><strong>Microsoft</strong> gained prominence with the <strong>Xbox</strong> platforms.</li>
-            </ul>
-            <p style="margin-top: 20px; color: rgb(222, 117, 18);"><strong>Key takeaway:</strong> Timing marketing around console cycles is crucial for maximizing impact.</p>
+            <div id="content2" class="overlay-item">
+                <h2>Top 10 Games by Sales</h2>
+                <iframe src="visualization2.html" width="100%" height="600px"></iframe>
+            </div>
+
+            <div id="content3" class="overlay-item">
+                <h2>Sales by Publisher</h2>
+                <iframe src="visualization3.html" width="100%" height="600px"></iframe>
+            </div>
+
+            <div id="content4" class="overlay-item">
+                <h2>Sales Over Time by Platform</h2>
+                <div class="content-container">
+                    <iframe src="https://nguyenlamvu88.github.io/dsci_554_project/visualizations_html/game_sales_over_time_stacked_bar_with_line_chart.html" width="100%" height="800px"></iframe>
+                    <div id="chart-note">
+                        <p class="delayed-text" style="color: lightslategray;">Note: <strong>Double click</strong> on the legend to isolate one trace.</p>
+                        <p class="delayed-text" style="color: lightslategray;"> Example: By double-clicking on "PS3" in the legend, only the sales data for PS3 will be displayed on the chart, hiding the data for all other platforms like Wii, Xbox 360, etc.</p>
+                        <p class="delayed-text" style="color: limegreen;">The chart shows key trends in the gaming industry:</p>
+                        <ul style="list-style-type: disc; margin: 20px 0; padding-left: 20px; color: limegreen;">
+                            <li class="delayed-text">Global video game sales peaked between <strong>2008-2010</strong>, driven by <strong>PS3</strong>, <strong>Wii</strong>, and <strong>Xbox 360</strong>.</li>
+                            <li class="delayed-text"><strong>Sony</strong> and <strong>Nintendo</strong> consistently dominated sales with key consoles like the <strong>PS2</strong> and <strong>Wii</strong>.</li>
+                            <li class="delayed-text"><strong>Sega</strong> was a key player in the <strong>1980s-1990s</strong>.</li>
+                            <li class="delayed-text">After <strong>2010</strong>, console sales declined with the rise of <strong>mobile</strong> and <strong>digital platforms</strong>.</li>
+                            <li class="delayed-text"><strong>Microsoft</strong> gained prominence with the <strong>Xbox</strong> platforms.</li>
+                        </ul>
+                        <p class="delayed-text" style="margin-top: 20px; color: rgb(222, 117, 18);"><strong>Key takeaway:</strong> Timing marketing around console cycles is crucial for maximizing impact.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content5" class="overlay-item">
+                <h2>Wordcloud Visualization Global Sales</h2>
+                <iframe src="https://nguyenlamvu88.github.io/dsci_554_project/visualizations_html/video_game_sales_wordcloud.html" width="100%" height="600px"></iframe>
+            </div>
+
         </div>
     </div>
+</div>
 
-    <!-- JavaScript to control visibility of the iframe -->
-    <script>
-        // Function to show the visualization when clicking on Hotspot 4
-        function showVisualization(event) {
-            event.stopPropagation();
-            var visualization = document.getElementById("visualization4");
-            visualization.style.display = "flex";  // Shows the iframe when called
-
-            // Reload the iframe after it's displayed
-            var iframe = document.getElementById("chart-iframe");
-            iframe.src = iframe.src;  // This reloads the iframe
-        }   
-
-        // Hide the chart if clicking outside of it
-        document.addEventListener('click', function(event) {
-            var visualization = document.getElementById("visualization4");
-            var isClickInside = visualization.contains(event.target);
-
-            if (!isClickInside) {
-                visualization.style.display = 'none';  // Hide the iframe if the click is outside the chart
-            }
+<script>
+    function showOverlay(contentId) {
+        document.getElementById('overlay').style.display = 'flex'; // Show overlay
+        var items = document.querySelectorAll('.overlay-item');
+        items.forEach(function(item) {
+            item.classList.remove('active'); // Hide all content
         });
+        document.getElementById(contentId).classList.add('active'); // Show selected content
 
-        // Prevent click inside the iframe from closing it
-        document.getElementById("visualization4").addEventListener('click', function(event) {
-            event.stopPropagation();  // Prevent the event from bubbling up to the document-level listener
-        });
-
-        // Close the chart when the "X" button is clicked
-        document.getElementById("close-btn").addEventListener("click", function(event) {
-            event.stopPropagation();  // Prevent the event from bubbling up to the document
-            var visualization = document.getElementById("visualization4");
-            visualization.style.display = 'none';  // Hide the iframe when X is clicked
-        });
-    </script>
-
-    <!-- Hidden iframe for Visualization 5 (Wordcloud) -->
-    <div id="visualization5" style="display:none; justify-content: center; align-items: center; height: 100vh; position: relative;">
-        <button id="close-btn-5" 
-                style="
-                    position: absolute; 
-                    top: 10px; 
-                    right: 10px; 
-                    background-color: lightcyan; 
-                    color: rgb(213, 10, 10); 
-                    font-size: 25px; 
-                    font-weight: bold; 
-                    padding: 5px 10px; 
-                    border: none; 
-                    border-radius: 20%; 
-                    cursor: pointer; 
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-                    ">
-            &times;
-        </button>
-        
-        <!-- Iframe with id="wordcloud-iframe" -->
-        <iframe id="wordcloud-iframe"  
-        src="https://nguyenlamvu88.github.io/dsci_554_project/vis_html/video_game_sales_wordcloud.html"
-        width="100%" height="100%" style="border:none;" loading="lazy"></iframe>
-
-        <div id="chart-note" style="margin-top: 60px; margin-left: 20px; text-align: left; color: #95c416; font-size: 18px; max-width: 900px;">
-            <p style="color: lightslategray;">This code analyzes video game sales data by performing <strong>sentiment analysis</strong> on game titles, extracting keywords from titles, genres, and publishers, and generating a word cloud to visualize frequent terms.</p>
-            <p><strong>Top 10 Words:</strong></p>
-            <ul>
-                <li>action: 3324</li>
-                <li>entertainment: 2479</li>
-                <li>sports: 2438</li>
-                <li>misc: 1712</li>
-                <li>interactive: 1626</li>
-                <li>adventure: 1430</li>
-                <li>racing: 1398</li>
-                <li>arts: 1358</li>
-                <li>electronic: 1354</li>
-            </ul>
-
-            <p style="margin-top: 20px; color: rgb(222, 117, 18);"><strong>Key Takeaway:</strong> The word cloud reveals that major publishers like Electronic Arts, Sony, and Konami dominate the market, along with popular genres such as action, sports, and adventure.</p>
-        </div>
-    </div>
-
-    <!-- JavaScript to control visibility of the Wordcloud iframe -->
-    <script>
-        // Function to show the Wordcloud visualization when clicking on Hotspot 5
-        function showWordcloud(event) {
-            event.stopPropagation();
-            var visualization5 = document.getElementById("visualization5");
-            visualization5.style.display = "flex";  // Shows the iframe when called
-
-            // Reload the iframe after it's displayed
-            var iframe = document.getElementById("wordcloud-iframe");
-            iframe.src = iframe.src;  // This reloads the iframe
+        // Reload the iframe if the content has an iframe
+        var iframe = document.querySelector('#' + contentId + ' iframe');
+        if (iframe) {
+        iframe.src = iframe.src; // This reloads the iframe
         }
+    }
+    function hideOverlay() {
+        document.getElementById('overlay').style.display = 'none'; // Hide overlay
+    }
 
-        // Hide the Wordcloud if clicking outside of it
-        document.addEventListener('click', function(event) {
-            var visualization5 = document.getElementById("visualization5");
-            var isClickInside5 = visualization5.contains(event.target);
-
-            if (!isClickInside5) {
-                visualization5.style.display = 'none';  // Hide the iframe if the click is outside the Wordcloud
-            }
-        });
-
-        // Prevent click inside the Wordcloud iframe from closing it
-        document.getElementById("visualization5").addEventListener('click', function(event) {
-            event.stopPropagation();  // Prevent the event from bubbling up to the document-level listener
-        });
-
-        // Close the Wordcloud when the "X" button is clicked
-        document.getElementById("close-btn-5").addEventListener("click", function(event) {
-            event.stopPropagation();  // Prevent the event from bubbling up to the document
-            var visualization5 = document.getElementById("visualization5");
-            visualization5.style.display = 'none';  // Hide the iframe when X is clicked
-        });
-
-        function startExperience() {
-        // Fade out the landing page
+    function startExperience() {
         document.getElementById("landingPage").style.opacity = "0"; // Smooth fade out
-
-        // After the fade-out, hide the landing page and show the main content
         setTimeout(function() {
             document.getElementById("landingPage").style.display = "none"; // Completely hide
             var mainContent = document.getElementById("mainContent");
             mainContent.style.display = "flex"; // Display main content
             mainContent.style.opacity = "1";    // Fade in main content
         }, 500); // Delay to match the fade-out transition
-        }
-        
-    </script>
+    }
+</script>
 
-    <!-- Contact Modal -->
-    <div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="contactModalLabel">About Us</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Smurf 1: Vu Nguyen, Call Sign: HS (Head Shot)</p>
-                    <p style="margin-left: 20px;">
-                        <a href="mailto:vulnguye@usc.com">Email</a> | 
-                        <a href="https://www.linkedin.com/in/vu-l-nguyen" target="_blank">LinkedIn</a> | 
-                        <a href="https://raw.githubusercontent.com/nguyenlamvu88/personal-website/main/vu_resume_sep_2024.pdf" target="_blank">Resume</a>
-                    </p>
-                    <p>Smurf 2: Kyle Parker, Call Sign: DPS (Damage Per Second)</p> 
-                    <p style="margin-left: 20px;">
-                        <a href="mailto:kyle@example.com">Email</a> | 
-                        <a href="https://www.linkedin.com/in/kyle-parker" target="_blank">LinkedIn</a> | 
-                        <a href="https://kyleparkerresume.pdf" target="_blank">Resume</a>
-                    </p>
-                    <p>Smurf 3: Dan Lee, Call Sign: OSOK (One Shot One Kill)</p>
-                    <p style="margin-left: 20px;">
-                        <a href="mailto:dan@example.com">Email</a> | 
-                        <a href="https://www.linkedin.com/in/dan-lee" target="_blank">LinkedIn</a> | 
-                        <a href="https://danleeresume.pdf" target="_blank">Resume</a>
-                    </p>                    
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">About Us</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Smurf 1: Vu Nguyen, Call Sign: HS (Head Shot)</p>
+                <p style="margin-left: 20px;">
+                    <a href="mailto:vulnguye@usc.com">Email</a> | 
+                    <a href="https://www.linkedin.com/in/vu-l-nguyen" target="_blank">LinkedIn</a> | 
+                    <a href="https://raw.githubusercontent.com/nguyenlamvu88/personal-website/main/vu_resume_sep_2024.pdf" target="_blank">Resume</a>
+                </p>
+                <p>Smurf 2: Kyle Parker, Call Sign: DPS (Damage Per Second)</p> 
+                <p style="margin-left: 20px;">
+                    <a href="mailto:kyle@example.com">Email</a> | 
+                    <a href="https://www.linkedin.com/in/kyle-parker" target="_blank">LinkedIn</a> | 
+                    <a href="https://kyleparkerresume.pdf" target="_blank">Resume</a>
+                </p>
+                <p>Smurf 3: Dan Lee, Call Sign: OSOK (One Shot One Kill)</p>
+                <p style="margin-left: 20px;">
+                    <a href="mailto:dan@example.com">Email</a> | 
+                    <a href="https://www.linkedin.com/in/dan-lee" target="_blank">LinkedIn</a> | 
+                    <a href="https://danleeresume.pdf" target="_blank">Resume</a>
+                </p>                    
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
-    </div>    
-    
-    <!-- Scripts for jQuery and Bootstrap functionality -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-</div>
+    </div>
+</div>    
+
+<!-- Scripts for jQuery and Bootstrap functionality -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
