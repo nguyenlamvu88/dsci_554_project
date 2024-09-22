@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Packed Bubbles - Video Game Sales</title>
+    <style>
+        /* Make the chart fill the available screen */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            justify-content: flex-start;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+
+        #chart {
+            flex: 1;
+            margin: 10px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 75%; /* Set the chart width to 75% of the screen width */
+            height: 75%; /* Set the chart height to 75% of the screen height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #controls {
+            width: 100%;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #slicer-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        #data-table {
+            max-height: 300px;
+            overflow-y: auto;
+            width: 90%; /* Adjust width to avoid extending beyond screen */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 5px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Container for the D3 chart -->
+    <div id="chart"></div>
+
+    <!-- Control panel and data table below the chart -->
+    <div id="controls">
+        <!-- Dropdown slicer container -->
+        <div id="slicer-container">
+            <div>
+                <label for="publisher-select">Select Publisher:</label>
+                <select id="publisher-select">
+                    <option value="all">All Publishers</option>
+                </select>
+            </div>
+            <div>
+                <label for="genre-select">Select Genre:</label>
+                <select id="genre-select">
+                    <option value="all">All Genres</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Data table container -->
+        <div id="data-table">
+            <table id="sales-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Genre</th>
+                        <th>Publisher</th>
+                        <th>Global Sales (M)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Include the full version of D3.js library -->
+    <script src="https://d3js.org/d3.v7.js"></script>
+    
+    <!-- Include your packed_bubbles.js script -->
+    <script src="interactive_packed_bubbles.js"></script>
+</body>
+</html>
