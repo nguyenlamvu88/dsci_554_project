@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Global Game Sales - USC Data Science</title>
+    <!-- Minified Bootstrap CSS for faster loading -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Trebuchet MS', Helvetica, sans-serif;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            padding-top: 50px;
+        }
+
+        .image-container {
+            width: 100%; /* Make the container responsive */
+            max-width: 1000px; /* Set a max width for the image */
+            margin: 0 auto; 
+            position: relative;
+        }
+
+        svg {
+            width: 100%; /* Make the SVG responsive */
+            height: auto; /* Maintain aspect ratio */
+        }
+
+        .area {
+            fill: transparent; /* No fill by default */
+            stroke: red; /* Outline color */
+            stroke-width: 3; /* Default outline width */
+            cursor: pointer; /* Change cursor on hover */
+            transition: fill 0.3s ease, stroke-width 0.3s ease; /* Smooth transition */
+        }
+
+        /* Hover effect: fill and thicker border */
+        .area:hover {
+            fill: rgba(255, 0, 0, 0.3); /* Fill with semi-transparent red on hover */
+            stroke-width: 5; /* Thicker border on hover */
+        }
+
+        .navbar-custom {
+            background-color: rgb(16, 1, 1);
+            color: #ffffff;
+            border-bottom: 4px solid #b22222;
+            position: fixed; /* Fix the navbar at the top */
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .navbar-nav .nav-link {
+            color: #ffff00;
+            margin-left: -15px;
+        }
+
+        .navbar-custom .navbar-nav .nav-link:hover {
+            color: #ffe5e5;
+        }
+
+        .footer {
+            background: #233D4D;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto;
+            font-size: 0.8em;
+        }
+
+        .btn-contact-me {
+            background-color: #4CAF50;
+            padding: 5px 10px;
+            font-size: 12px;
+            color: white;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .btn-contact-me:hover {
+            background-color: #3e8e41;
+        }
+
+        .landing-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: white;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .main-content {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            padding-top: 50px;
+            transition: opacity 0.5s ease-in-out;
+            background-size: contain;
+            background-attachment: fixed;
+            background-color: black;
+        }
+
+        .start-btn {
+            width: 150px;
+            height: 150px;
+            background-image: url('https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/play_button.jpg');
+            background-size: contain;
+            background-position: center;
+            border-radius: 50%; /* Makes the button round */
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: transparent;
+            text-align: center;
+            font-size: 0;
+            transition: transform 0.3s ease;
+            animation: jump 1s infinite ease-in-out;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95); /* Darker background */
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+            padding: 20px; /* Padding around the content */
+        }
+
+        .overlay-content {
+            position: relative;
+            background-color: #111;
+            padding: 30px; /* More padding for content */
+            width: 95%; /* Increased width */
+            max-width: 1200px; /* Increased max-width */
+            border-radius: 8px;
+        }
+
+        .overlay-item {
+            display: none;
+        }
+
+        .overlay-item.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: transparent;
+            color: white;
+            font-size: 30px;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .close-btn:hover {
+            color: #ff0000;
+        }
+
+        /* Container to align the chart and text side by side */
+        .content-container {
+            display: flex; /* Display content side by side */
+            align-items: flex-start; /* Align items at the top */
+            justify-content: space-between; /* Space between chart and text */
+            gap: 30px; /* Space between iframe and text */
+        }
+
+        /* Styles for the text container */
+        #chart-note {
+            max-width: 25%; /* Increased width for the text */
+            margin-left: 10px; /* Space between chart and text */
+            text-align: left; /* Align text to the left */
+        }
+
+        /* Iframe container styles */
+        .content-container iframe {
+            flex: 3; /* Allows the iframe to take twice the space of the text container */
+            max-width: 80%; /* Ensure the iframe has a good width balance */
+            height: 550px;
+            border: none; /* Remove iframe border */
+        }
+
+        /* Styles for delayed text appearance */
+        .delayed-text {
+            opacity: 0; /* Start with hidden text */
+            animation: fadeIn 1s forwards; /* Apply animation */
+            margin-bottom: 10px; /* Space between text elements */
+        }
+
+        /* Increased delays by 5s */
+        #chart-note p:nth-of-type(1) { animation-delay: 4s; }
+        #chart-note p:nth-of-type(2) { animation-delay: 8s; }
+        #chart-note p:nth-of-type(3) { animation-delay: 12s; }
+        #chart-note ul li:nth-of-type(1) { animation-delay: 16s; }
+        #chart-note ul li:nth-of-type(2) { animation-delay: 20s; }
+        #chart-note ul li:nth-of-type(3) { animation-delay: 24s; }
+        #chart-note ul li:nth-of-type(4) { animation-delay: 28s; }
+        #chart-note ul li:nth-of-type(5) { animation-delay: 32s; }
+        #chart-note p:nth-of-type(4) { animation-delay: 36s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1; /* Final state is fully visible */
+            }
+        }
+
+        @keyframes jump {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .start-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .landing-page h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 40px;
+            color: #d916af;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            margin: 40px 0;
+            text-align: center;
+        }
+        .hover-text-box {
+            display: none; /* Hidden by default */
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 14px;
+            white-space: nowrap; /* Prevents text from wrapping */
+            z-index: 1000; /* Ensure it appears on top */
+        }
+    </style>
+</head>
+
+<body>
+<div class="landing-page" id="landingPage">
+    <h1>Let's Get Started</h1>
+    <button class="start-btn" onclick="startExperience()">Start</button>
+</div>
+
+<div class="main-content" id="mainContent">
+
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <a class="navbar-brand" href="#">DSCI 554 (Fall 2024) - Game On: A Data-Driven Exploration of Global Sales</a>
+                <div style="font-size: 20px; color: #ffff00;">Team S.M.U.R.F</div>
+            </div>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-contact-me" data-toggle="modal" data-target="#contactModal"
+                    style="font-size: 16px; padding: 10px 20px; background-color: #212b9b; color: white; margin-right: 20px;">
+                    About US
+                </button>
+                <img src="https://raw.githubusercontent.com/nguyenlamvu88/dsci_554_project/main/images_icons_logos/usc-primary-logotype.svg"
+                    alt="USC Logo" class="usc-logo" title="University of Southern California" 
+                    style="width: 200px; height: auto; margin-left: 10px;">
+            </div>
+        </div>
+    </nav>
+    <div class="image-container"></div>
+        <svg viewBox="0 0 1024 1024">
+            <image href="map_game.jpg" width="1024" height="1024" />
+            <a href="javascript:void(0);" onclick="showOverlay('content1')">
+                <polygon data-text="Global Sales by Region" points="58,187,65,187,90,177,101,172,120,178,129,181,141,181,146,187,152,191,160,192,167,191,175,189,183,186,191,182,199,182,207,180,215,178,223,182,230,185,237,186,244,186,252,187,259,187,264,189,266,193,266,198,268,203,273,205,280,202,286,206,291,210,295,213,292,218,289,224,292,230,294,236,287,239,280,241,285,246,287,253,279,253,270,251,264,246,256,241,249,239,248,245,250,251,253,256,256,261,249,263,240,261,231,256,222,251,215,246,210,250,214,255,219,259,225,263,230,266,235,274,227,274,220,273,214,271,208,265,205,272,201,277,193,275,184,274,175,271,168,269,161,283,157,288,150,288,143,290,136,296,129,300,120,298,114,293,105,292,98,292,90,292,82,292,69,290,63,290,55,289,48,286,50,278,52,268,59,266,64,260,59,255,51,257,44,260,38,265,29,272,23,277,17,280,11,284,5,281,3,273,1,263,0,189,7,192,14,196,20,198,28,200,34,200,42,197,49,193,75,183,83,180" class="area" />
+            </a>
+            <a href="javascript:void(0);" onclick="showOverlay('content2')">
+                <polygon data-text="Top 10 Games by Sales" points="437,267,431,266,426,272,421,276,420,286,414,292,408,293,403,298,407,304,409,310,411,318,415,322,422,323,426,327,432,330,435,334,438,339,446,343,456,346,463,348,469,349,476,350,482,346,489,343,493,346,500,349,505,346,513,343,519,339,525,339,532,338,538,335,546,334,552,331,556,326,560,320,566,317,571,314,574,308,576,301,579,295,575,289,568,284,561,279,560,272,558,265,550,262,543,261,535,259,533,252,531,244,526,238,524,245,522,252,522,260,522,266,514,263,508,259,502,254,497,248,497,241,494,233,489,227,487,219,483,211,482,203,478,215,476,223,475,230,472,235,469,242,468,249,468,255,468,262,469,270,468,276,461,272,460,265,455,268,448,264" class="area" />
+            </a>
+            <a href="javascript:void(0);" onclick="showOverlay('content3')">
+                <polygon data-text="Sales by Publisher" points="679,316,687,314,694,312,700,309,705,306,712,304,717,300,723,296,728,294,733,288,738,286,744,289,748,293,753,297,759,295,766,289,773,284,780,279,786,273,791,270,794,267,799,271,803,275,808,279,811,283,816,285,821,289,825,293,831,295,836,298,839,303,845,308,850,308,856,306,861,307,866,310,870,314,875,318,879,321,883,327,889,330,894,334,900,337,906,338,913,341,920,342,926,344,932,346,938,349,944,351,940,355,934,356,926,356,933,362,938,365,945,368,951,371,958,374,964,377,969,381,962,383,966,388,971,392,959,392,951,393,956,399,961,401,968,405,975,409,980,411,989,416,983,420,977,424,969,423,961,421,964,427,969,430,970,435,964,434,956,434,949,433,942,432,940,437,946,442,949,446,945,453,939,455,938,461,942,466,945,471,945,475,942,478,937,479,934,486,938,489,943,493,948,497,940,499,935,504,930,508,925,512,919,516,913,512,908,508,901,505,893,502,890,496,891,487,884,489,880,494,876,498,870,494,869,490,870,482,865,483,858,483,862,476,861,468,859,462,853,456,848,460,843,449,838,443,835,450,830,455,825,459,819,463,811,464,805,457,805,450,804,443,799,446,794,441,787,442,778,444,771,452,767,457,768,463,764,465,756,467,749,467,745,462,737,463,731,465,724,470,722,463,722,455,720,446,717,440,711,438,704,438,697,440,689,441,684,435,697,425,695,418,688,418,683,422,676,423,669,424,664,420,656,418,650,413,650,409,648,402,643,407,637,410,632,413,623,414,616,414,610,413,602,412,595,412,586,410,592,403,598,397,605,393,611,393,617,391,623,390,631,386,625,380,619,377,628,370,635,366,632,360,637,358,644,356,649,352,656,348,661,342,660,338,654,339,645,341,638,341,654,334,660,331,667,329,672,323" class="area" />
+            </a>
+            <a href="javascript:void(0);" onclick="showOverlay('content4')">
+                <polygon data-text="Sales Over Time by Platform" points="561,547,567,549,575,552,580,554,585,559,590,561,596,563,601,565,601,572,608,576,613,579,624,579,631,575,642,574,636,569,635,562,630,557,637,553,644,554,646,560,652,563,667,570,674,573,680,571,686,567,691,563,697,560,702,561,703,552,701,544,701,537,701,530,694,527,690,525,691,516,691,511,689,502,683,502,678,511,671,508,670,503,674,497,670,491,668,484,668,476,665,468,664,458,661,470,657,478,657,487,639,478,636,486,628,490,628,481,625,471,627,464,619,440,614,462,614,469,616,471,614,478,612,489,612,495,606,494,605,486,601,481,598,487,594,482,590,473,588,460,586,474,581,480,581,501,583,508,583,515,578,511,574,511,572,515,561,525,561,538,561,547" class="area" />
+            </a>
+            <a href="javascript:void(0);" onclick="showOverlay('content5')">
+                <polygon data-text="Wordcloud Visualization Global Sales" points="339,608,340,615,344,621,351,623,355,626,358,635,356,642,356,648,357,655,359,661,364,665,368,670,372,676,368,681,376,685,381,689,387,692,394,694,400,695,406,699,410,702,414,708,418,713,422,716,428,719,433,720,439,721,445,722,451,723,456,724,462,726,467,726,470,724,474,722,480,719,486,721,492,720,499,716,506,716,512,716,518,719,522,722,528,725,533,726,537,724,543,720,548,721,554,722,559,722,565,726,569,730,577,730,580,728,587,728,592,731,598,732,602,735,602,746,603,755,603,760,606,767,610,769,612,776,615,781,619,787,623,790,628,794,631,803,629,809,634,812,640,815,645,814,652,814,658,816,666,824,670,831,674,837,674,844,670,848,667,855,666,864,672,870,674,878,674,883,666,886,658,888,655,895,652,901,646,905,640,910,635,916,629,917,623,922,615,923,610,926,604,931,600,935,597,941,595,947,594,955,592,961,590,969,588,975,585,980,580,984,575,989,569,993,565,998,557,998,551,999,544,1004,535,1005,529,1005,522,1004,514,1003,507,1002,499,1001,492,997,486,993,478,990,469,989,464,992,458,995,451,997,437,998,431,998,423,995,416,991,412,984,418,977,411,972,408,968,412,959,417,953,413,944,408,939,401,936,396,931,392,924,385,928,378,931,372,928,367,922,365,915,361,910,353,906,345,906,336,908,324,912,318,913,311,915,301,915,294,913,287,911,279,909,270,904,265,900,261,892,261,886,258,878,252,873,253,865,261,861,262,854,257,847,254,841,247,837,242,834,232,832,224,832,210,831,202,828,194,827,186,824,179,821,174,815,165,816,158,819,150,820,141,820,134,819,127,816,119,813,116,806,120,799,113,793,109,788,109,779,111,770,110,763,114,756,120,750,125,746,134,742,143,738,149,736,151,728,149,720,149,713,153,706,157,701,162,697,166,690,168,682,174,679,181,677,190,676,197,676,203,676,212,675,220,676,226,672,235,669,241,668,247,665,252,660,261,655,268,650,274,648,278,642,282,636,291,633,293,625,297,620,304,617,311,614,315,610,320,605,326,603,332,603" class="area" />
+            </a>
+        </svg>
+    </div>
+    
+
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <button class="close-btn" onclick="hideOverlay()">&times;</button>
+            
+            <div id="content1" class="overlay-item">
+                <h2>Global Sales by Region</h2>
+                <iframe src="visualization1.html" width="100%" height="600px"></iframe>
+            </div>
+
+            <div id="content2" class="overlay-item">
+                <h2>Top 10 Games by Sales</h2>
+                <iframe src="visualization2.html" width="100%" height="600px"></iframe>
+            </div>
+
+            <div id="content3" class="overlay-item">
+                <h2>Sales by Publisher</h2>
+                <iframe src="visualization3.html" width="100%" height="600px"></iframe>
+            </div>
+
+            <div id="content4" class="overlay-item">
+                <h2>Sales Over Time by Platform</h2>
+                <div class="content-container">
+                    <iframe src="https://nguyenlamvu88.github.io/dsci_554_project/visualizations_html/game_sales_over_time_stacked_bar_with_line_chart.html" width="100%" height="800px"></iframe>
+                    <div id="chart-note">
+                        <p class="delayed-text" style="color: lightslategray;">Note: <strong>Double click</strong> on the legend to isolate one trace.</p>
+                        <p class="delayed-text" style="color: lightslategray;"> Example: By double-clicking on "PS3" in the legend, only the sales data for PS3 will be displayed on the chart, hiding the data for all other platforms like Wii, Xbox 360, etc.</p>
+                        <p class="delayed-text" style="color: limegreen;">The chart shows key trends in the gaming industry:</p>
+                        <ul style="list-style-type: disc; margin: 20px 0; padding-left: 20px; color: limegreen;">
+                            <li class="delayed-text">Global video game sales peaked between <strong>2008-2010</strong>, driven by <strong>PS3</strong>, <strong>Wii</strong>, and <strong>Xbox 360</strong>.</li>
+                            <li class="delayed-text"><strong>Sony</strong> and <strong>Nintendo</strong> consistently dominated sales with key consoles like the <strong>PS2</strong> and <strong>Wii</strong>.</li>
+                            <li class="delayed-text"><strong>Sega</strong> was a key player in the <strong>1980s-1990s</strong>.</li>
+                            <li class="delayed-text">After <strong>2010</strong>, console sales declined with the rise of <strong>mobile</strong> and <strong>digital platforms</strong>.</li>
+                            <li class="delayed-text"><strong>Microsoft</strong> gained prominence with the <strong>Xbox</strong> platforms.</li>
+                        </ul>
+                        <p class="delayed-text" style="margin-top: 20px; color: rgb(222, 117, 18);"><strong>Key takeaway:</strong> Timing marketing around console cycles is crucial for maximizing impact.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content5" class="overlay-item">
+                <h2>Wordcloud Visualization Global Sales</h2>
+                <iframe src="https://nguyenlamvu88.github.io/dsci_554_project/visualizations_html/video_game_sales_wordcloud.html" width="100%" height="600px"></iframe>
+            </div>
+
+        </div>
+    </div>
+            
+</div>
+
+<div id="hover-text-box" class="hover-text-box"></div>
+<script>
+    // Your JavaScript code here
+    document.querySelectorAll('.area').forEach(area => {
+        area.addEventListener('mouseenter', function(event) {
+            const hoverTextBox = document.getElementById('hover-text-box');
+            const text = this.getAttribute('data-text');
+
+            // Update the text and make it visible
+            hoverTextBox.innerHTML = text;
+            hoverTextBox.style.display = 'block';
+
+            // Get the position of the area
+            const areaRect = this.getBoundingClientRect();
+
+            // Position the text box above the polygon area
+            hoverTextBox.style.left = `${areaRect.left + areaRect.width / 2 - hoverTextBox.offsetWidth / 2}px`; // Center above the area
+            hoverTextBox.style.top = `${areaRect.top - hoverTextBox.offsetHeight - 5}px`; // Position above with a small gap
+        });
+
+        area.addEventListener('mouseleave', function() {
+            const hoverTextBox = document.getElementById('hover-text-box');
+            hoverTextBox.style.display = 'none'; // Hide the text box when mouse leaves
+        });
+    });
+</script>
+<script>
+    function showOverlay(contentId) {
+        document.getElementById('overlay').style.display = 'flex'; // Show overlay
+        var items = document.querySelectorAll('.overlay-item');
+        items.forEach(function(item) {
+            item.classList.remove('active'); // Hide all content
+        });
+        document.getElementById(contentId).classList.add('active'); // Show selected content
+
+        // Reload the iframe if the content has an iframe
+        var iframe = document.querySelector('#' + contentId + ' iframe');
+        if (iframe) {
+        iframe.src = iframe.src; // This reloads the iframe
+        }
+    }
+    function hideOverlay() {
+        document.getElementById('overlay').style.display = 'none'; // Hide overlay
+    }
+
+    function startExperience() {
+        document.getElementById("landingPage").style.opacity = "0"; // Smooth fade out
+        setTimeout(function() {
+            document.getElementById("landingPage").style.display = "none"; // Completely hide
+            var mainContent = document.getElementById("mainContent");
+            mainContent.style.display = "flex"; // Display main content
+            mainContent.style.opacity = "1";    // Fade in main content
+        }, 500); // Delay to match the fade-out transition
+    }
+</script>
+
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">About Us</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Smurf 1: Vu Nguyen, Call Sign: HS (Head Shot)</p>
+                <p style="margin-left: 20px;">
+                    <a href="mailto:vulnguye@usc.com">Email</a> | 
+                    <a href="https://www.linkedin.com/in/vu-l-nguyen" target="_blank">LinkedIn</a> | 
+                    <a href="https://raw.githubusercontent.com/nguyenlamvu88/personal-website/main/vu_resume_sep_2024.pdf" target="_blank">Resume</a>
+                </p>
+                <p>Smurf 2: Kyle Parker, Call Sign: DPS (Damage Per Second)</p> 
+                <p style="margin-left: 20px;">
+                    <a href="mailto:kyle@example.com">Email</a> | 
+                    <a href="https://www.linkedin.com/in/kyle-parker" target="_blank">LinkedIn</a> | 
+                    <a href="https://kyleparkerresume.pdf" target="_blank">Resume</a>
+                </p>
+                <p>Smurf 3: Dan Lee, Call Sign: OSOK (One Shot One Kill)</p>
+                <p style="margin-left: 20px;">
+                    <a href="mailto:dan@example.com">Email</a> | 
+                    <a href="https://www.linkedin.com/in/dan-lee" target="_blank">LinkedIn</a> | 
+                    <a href="https://danleeresume.pdf" target="_blank">Resume</a>
+                </p>                    
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>    
+
+<!-- Scripts for jQuery and Bootstrap functionality -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
