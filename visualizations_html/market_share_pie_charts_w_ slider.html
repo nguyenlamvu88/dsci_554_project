@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pie Charts with Slider</title>
+    <style>
+        .chart-container {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .slider-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        input[type="range"] {
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chart-container">
+    <canvas id="chartCanvas"></canvas>
+</div>
+
+<div class="slider-container">
+    <input type="range" min="1" max="33" value="1" id="chartSlider">
+    <p>Chart <span id="chartNumber">1</span> of 33</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const chartData = [
+    {data: [28.86], labels: ['Atari']},
+    {data: [5.83, 10.96], labels: ['Atari', 'Nintendo']},
+    {data: [0.27, 50.09], labels: ['Atari', 'Nintendo']},
+    {data: [0.45, 53.46], labels: ['Atari', 'Nintendo']},
+    {data: [0.66, 36.41], labels: ['Atari', 'Nintendo']},
+    {data: [1.98, 19.76], labels: ['Atari', 'Nintendo']},
+    {data: [0.75, 46.44], labels: ['Atari', 'Nintendo']},
+    {data: [0.62, 72.83], labels: ['Atari', 'Nintendo']},
+    {data: [46.79, 2.6], labels: ['Nintendo', 'SEGA']},
+    {data: [27.89, 4.34], labels: ['Nintendo', 'SEGA']},
+    {data: [60.44, 12.7, 3.02], labels: ['Nintendo', 'SEGA', 'PC']},
+    {data: [43.62, 2.15, 0.21], labels: ['Nintendo', 'SEGA', 'SNK']},
+    {data: [0.02, 47.36, 12.85, 12.12, 0.8, 6.02], labels: ['3DO', 'Nintendo', 'PC', 'SEGA', 'SNK', 'Sony']},
+    {data: [0.08, 0.16, 35.81, 4.23, 11.58, 0.33, 35.92], labels: ['3DO', 'NEC', 'Nintendo', 'PC', 'SEGA', 'SNK', 'Sony']},
+    {data: [0.03, 86.06, 10.59, 7.69, 0.1, 94.68], labels: ['NEC', 'Nintendo', 'PC', 'SEGA', 'SNK', 'Sony']},
+    {data: [46.87, 11.26, 6.77, 136.08], labels: ['Nintendo', 'PC', 'SEGA', 'Sony']},
+    {data: [76.4, 3.28, 7.21, 169.58], labels: ['Nintendo', 'PC', 'SEGA', 'Sony']},
+    {data: [0.46, 96.23, 4.75, 5.26, 144.57], labels: ['Bandai', 'Nintendo', 'PC', 'SEGA', 'Sony']},
+    {data: [0.68, 0.99, 53.83, 4.68, 5.99, 135.39], labels: ['Bandai', 'Microsoft', 'Nintendo', 'PC', 'SEGA', 'Sony']},
+    {data: [0.28, 22.24, 100.42, 5.51, 1.07, 201.95], labels: ['Bandai', 'Microsoft', 'Nintendo', 'PC', 'SEGA', 'Sony']},
+    {data: [48.15, 126.39, 8.6, 0.29, 212.09], labels: ['Microsoft', 'Nintendo', 'PC', 'SEGA', 'Sony']},
+    {data: [55.16, 107.39, 8.96, 186.34], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [65.5, 124.44, 10.46, 218.91], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [57.49, 193.1, 4.47, 204.88], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [62.03, 275.7, 2.97, 180.34], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [96.39, 308.03, 9.4, 197.29], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [135.94, 322.05, 12.67, 208.2], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [120.85, 332.43, 17.16, 196.86], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [171.05, 219.78, 24.46, 185.16], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [145.12, 152.74, 35.25, 182.88], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [100.88, 103.39, 23.53, 135.74], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [171.05, 219.78, 24.46, 185.16], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [145.12, 152.74, 35.25, 182.88], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [100.88, 103.39, 23.53, 135.74], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [108.21, 89.04, 12.83, 158.03], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [88.85, 70.11, 13.39, 164.7], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    {data: [70.71, 44.92, 8.07, 140.74], labels: ['Microsoft', 'Nintendo', 'PC', 'Sony']},
+    ];
+
+    const colorMap = {
+        'Atari': '#100c08',
+        'Nintendo': '#CD3333',
+        'PC': '#FFCE56',
+        'SEGA': '#4BC0C0',
+        'SNK': '#9966FF',
+        'Sony': '#003087',
+        '3DO': '#008080',
+        'NEC': '#8A2BE2',
+        'Bandai': '#FFD700',
+        'Microsoft': '#107C10'
+    };
+
+    // Function to create and update the pie chart
+    function updateChart(chart, data, labels) {
+        const backgroundColors = labels.map(label => colorMap[label] || '#CCCCCC');  // Assign color from map or use default
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = data;
+        chart.data.datasets[0].backgroundColor = backgroundColors;
+        chart.update();
+    }
+
+    // Initialize the pie chart
+    const ctx = document.getElementById('chartCanvas').getContext('2d');
+    const pieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: chartData[0].labels,
+            datasets: [{
+                data: chartData[0].data,
+                backgroundColor: chartData[0].labels.map(label => colorMap[label] || '#CCCCCC'),  // Initial colors
+            }]
+        },
+        options: {
+            responsive: true,
+        }
+    });
+
+    // Update the chart when the slider changes
+    document.getElementById('chartSlider').addEventListener('input', function() {
+        const chartIndex = this.value - 1;
+        document.getElementById('chartNumber').textContent = this.value;
+        updateChart(pieChart, chartData[chartIndex].data, chartData[chartIndex].labels);
+    });
+</script>
+
+</body>
+</html>
